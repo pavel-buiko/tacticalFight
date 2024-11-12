@@ -2,12 +2,7 @@ import React from "react";
 import { battlefieldContainer, gridContainer } from "./style.css";
 import UnitCell from "./UnitCell";
 import { Unit } from "../models/Unit";
-
-interface TargetSelectionMode {
-  type: "ally" | "enemy";
-  resolve: (unit: Unit | null) => void;
-  isValidTarget?: (unit: Unit) => boolean;
-}
+import { TargetSelectionMode } from "../hooks/useTargetSelection";
 
 interface BattlefieldProps {
   units: Unit[];
