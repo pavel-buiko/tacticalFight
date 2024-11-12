@@ -1,35 +1,81 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// App.tsx
+import React, { useState } from "react";
+import Battlefield from "./components/Battlefield";
+import ActionButtons from "./components/ActionButtons";
+import TurnOrder from "./components/TurnOrder";
+import { appStyle } from "./components/style.css";
+import useBattle from "./hooks/useBattle";
+import useTargetSelection from "./hooks/useTargetSelection";
+import {
+  handleAttack,
+  handleHeal,
+  handleParalyze,
+  handleDefend,
+} from "./models/actions";
+import { Unit } from "./models/Unit";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App: React.FC = () => {
+  const {
+    redTeamUnits,
+    blueTeamUnits,
+    battle,
+    currentUnit,
+    updateUnitsState,
+    nextTurn,
+  } = useBattle();
+
+  const { targetSelectionMode, selectTarget, handleUnitSelect } =
+    useTargetSelection(currentUnit);
+
+  const [hoveredUnit, setHoveredUnit] = useState<Unit | null>(null);
+
+  const handleAction = async (actionType: string) => {
+    if (currentUnit) {
+      switch (actionType) {
+        case "Атака":
+          await handleAttack(
+            currentUnit,
+            battle,
+            selectTarget,
+            updateUnitsState
+          );
+          break;
+        case "Лечение":
+          await handleHeal(currentUnit, battle, selectTarget, updateUnitsState);
+          break;
+        case "Парализация":
+          await handleParalyze(currentUnit, selectTarget, updateUnitsState);
+          break;
+        case "Защита":
+          handleDefend(currentUnit, updateUnitsState);
+          break;
+        default:
+          console.log("Неизвестное действие");
+          break;
+      }
+      nextTurn();
+    }
+  };
 
   return (
-    <>
+    <div className={appStyle}>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <Battlefield
+          units={[...redTeamUnits, ...blueTeamUnits]}
+          onUnitSelect={handleUnitSelect}
+          currentUnit={currentUnit}
+          targetSelectionMode={targetSelectionMode}
+          hoveredUnit={hoveredUnit}
+        />
+        <ActionButtons currentUnit={currentUnit} onAction={handleAction} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+      <TurnOrder
+        turnOrder={battle.turnOrder}
+        currentUnit={currentUnit}
+        onHoverUnit={setHoveredUnit}
+      />
+    </div>
+  );
+};
 
-export default App
+export default App;
