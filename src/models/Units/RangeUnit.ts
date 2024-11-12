@@ -1,6 +1,6 @@
 import { Unit } from "../Unit";
-import { IAttack } from "../UnitActionInterfaces";
-import { IPosition as Position } from "../IPosition";
+import { IAttack } from "../UnitInterfaces";
+import { IPosition as Position } from "../UnitInterfaces";
 
 export class RangeUnit extends Unit implements IAttack {
   public damage: number;
@@ -8,13 +8,14 @@ export class RangeUnit extends Unit implements IAttack {
   constructor(
     name: string,
     health: number,
+    maxHealth: number,
     initiative: number,
     image: string,
     position: Position,
-    team: "red" | "orange",
+    team: "red" | "blue",
     damage: number
   ) {
-    super(name, health, initiative, image, position, team);
+    super(name, health, maxHealth, initiative, image, position, team);
     this.damage = damage;
   }
 

@@ -1,5 +1,5 @@
-import { IMassAttack } from "../UnitActionInterfaces";
-import { IPosition as Position } from "../IPosition";
+import { IMassAttack } from "../UnitInterfaces";
+import { IPosition as Position } from "../UnitInterfaces";
 import { Unit } from "../Unit";
 
 export class MageUnit extends Unit implements IMassAttack {
@@ -8,13 +8,14 @@ export class MageUnit extends Unit implements IMassAttack {
   constructor(
     name: string,
     health: number,
+    maxHealth: number,
     initiative: number,
     image: string,
     position: Position,
-    team: "red" | "orange",
+    team: "red" | "blue",
     damage: number
   ) {
-    super(name, health, initiative, image, position, team);
+    super(name, health, maxHealth, initiative, image, position, team);
     this.damage = damage;
   }
 

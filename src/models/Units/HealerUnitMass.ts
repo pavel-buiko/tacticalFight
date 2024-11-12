@@ -1,6 +1,6 @@
 import { Unit } from "../Unit";
-import { IPosition as Position } from "../IPosition";
-import { IMassHeal } from "../UnitActionInterfaces";
+import { IPosition as Position } from "../UnitInterfaces";
+import { IMassHeal } from "../UnitInterfaces";
 
 export class HealerUnitMass extends Unit implements IMassHeal {
   public healAmount: number;
@@ -8,13 +8,14 @@ export class HealerUnitMass extends Unit implements IMassHeal {
   constructor(
     name: string,
     health: number,
+    maxHealth: number,
     initiative: number,
     image: string,
     position: Position,
-    team: "red" | "orange",
+    team: "red" | "blue",
     healAmount: number
   ) {
-    super(name, health, initiative, image, position, team);
+    super(name, health, maxHealth, initiative, image, position, team);
     this.healAmount = healAmount;
   }
 
